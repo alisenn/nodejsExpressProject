@@ -2,24 +2,23 @@ const express = require('express');
 const mongoose = require('mongoose')
 require('dotenv/config')
 const app = express();
-
-//Middlewares
-// app.use('/posts', () => {
-//     console.log('This is a middleware')
-// })
+const bodyParser = require('body-parser')
 
 //Import Routes
-const restRoute = require('./routes/restRoutes');
+const restRoute = require('./routes/country');
 
-app.use('/posts', restRoute)
+//Middlewares
+app.use('/countries', restRoute)
+app.use(bodyParser.json());
 
-app.get('/', (req,res) => {
+// Routes
+app.get('/', (req, res) => {
     res.send('We are on home')
 })
 
 //Connect to db
 mongoose.connect(
-    process.env.DB_CONNECTION, {userNewUrlParser: true}, () =>
+    process.env.DB_CONNECTION, () =>
         console.log('connected to db')
 )
 
