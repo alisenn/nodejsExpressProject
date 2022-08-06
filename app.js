@@ -5,10 +5,12 @@ const app = express();
 const bodyParser = require('body-parser')
 
 //Import Routes
-const restRoute = require('./routes/country');
+const country = require('./routes/country');
+const salesRep = require('./routes/salesrep');
 
 //Middlewares
-app.use('/countries', restRoute)
+app.use('/countries', country)
+app.use('/salesrep', salesRep)
 app.use(bodyParser.json());
 
 // Routes
