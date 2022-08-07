@@ -23,12 +23,12 @@ router.get('/', (req,resp) => {
                 result['maxSalesReq'] = Math.ceil(value.size/3)
                 resArr.push( Object.assign({}, result) )
             })
-            console.log(resArr)
            resp.json(resArr)
 
         })
         .catch(error => {
-            console.error(error);
+            resp.json({message: error})
+
         });
 })
 
