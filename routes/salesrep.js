@@ -2,28 +2,34 @@ const axios = require('axios');
 const express = require("express");
 const router = express.Router();
 
-class SalesRep {
-    static getRoutes(container){
 
-        router.get('/', (req,res) => {
-            axios
-                .get('http://localhost:3000/countries')
-                .then(res => {
-                    console.log(`statusCode: ${res.status}`);
-                    console.log(res);
-                    return res
-                })
-                .catch(error => {
-                    console.error(error);
-                });
+router.get('/', (req,resp) => {
+    axios
+        .get('http://localhost:3000/countries')
+        .then(res => {
+            var salesRep = new Map(); //region key, country number is value
+            var result = {}
+            var resArr = []
+            for (var i=0; i<res.data.length; i++){
+                if ( salesRep.get(res.data[i].region) === undefined){
+                    salesRep.set(res.data[i].region, new Set())
+                }else {
+                    salesRep.get(res.data[i].region).add(res.data[i].name)
+                }
+            }
+            salesRep.forEach((value, key) => {
+                result['region'] = key
+                result['minSalesReq'] = Math.ceil(value.size/7)
+                result['maxSalesReq'] = Math.ceil(value.size/3)
+                resArr.push( Object.assign({}, result) )
+            })
+            console.log(resArr)
+           resp.json(resArr)
+
         })
-        return router;
-    }
-
-    constructor(req, res, salesRepService) {
-        this._salesRepService = salesRepService;
-    }
-}
-
+        .catch(error => {
+            console.error(error);
+        });
+})
 
 module.exports = router;
